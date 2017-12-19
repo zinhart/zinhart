@@ -1,0 +1,5 @@
+#ifndef ZINHART_TRAITS
+#define ZINHART_TRAITS
+#include "./config"
+#include "./inc/zinhart_traits.h"
+#endif

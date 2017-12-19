@@ -1,0 +1,5 @@
+#ifndef NESTED_ILIST
+#define NESTED_ILIST
+#include "declarations"
+#include "inc/nested_ilist.h"
+#endif

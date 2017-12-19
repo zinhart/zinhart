@@ -1,0 +1,6 @@
+#ifndef STEADY_TIMER
+#define STEADY_TIMER
+#include "declarations"
+//#include "./inc/steady_timer.h"
+#include "./src/steady_timer.tpp"
+#endif /* STEADY_TIMER */

@@ -1,0 +1,7 @@
+#ifndef SEQUENCE_CONTAINER
+#define SEQUENCE_CONTAINER
+#include "declarations"
+//#include "./inc/sequence_container.h"
+#include "./src/sequence_container.tpp"
+#endif /* SEQUENCE_CONTAINER */
+

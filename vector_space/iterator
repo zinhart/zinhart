@@ -1,0 +1,6 @@
+#ifndef ITERATOR
+#define ITERATOR
+#include "declarations"
+//#include "inc/iterator.h"
+#include "src/iterator.tpp"
+#endif /* ITERATOR */

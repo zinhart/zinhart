@@ -1,0 +1,4 @@
+#ifndef CONFIG
+#define CONFIG
+#include "./inc/config.h"
+#endif

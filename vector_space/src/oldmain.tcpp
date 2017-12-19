@@ -1,0 +1,492 @@
+#include <iostream>
+#include "../inc/config.h"
+#include "../inc/space.h"
+#include "../inc/testallocator.h"
+#include "../inc/steadytimer.h"
+#include "../inc/iterator.h"
+#include <random>
+#include <vector>
+#include <deque>
+#include <set>
+#include <map>
+#include <complex>
+using namespace std;
+using namespace zinhart;
+void Test_Space_Rank_0();
+void Test_Space_Rank_1();
+void Push_Back_Benchmark();
+void Test_Space_Rank_Greater_Than_2();
+const lluint limit
+= 20;
+//= 10000000;
+//= 100000000000;
+
+/**
+ * CURRENT AGENDA AS OF 4/27/2017,
+ * 1. REWRITE DEFAULT APPEND INORDER FOR RESIZE TO FUNCTION CORRECTLY. Done 4/27/2017 @ 3:20 pm done 4/28/2016 @ 10:26am
+ * 2. WRITE FUNCTIONS TO DEALLOCATE MEMORY SIMILAR TO THOSE IN STL_UNINITIALED.H- FINISH MAKE MOVE ITERATOR IF NO EXCEPT 4/27/17 5:21 pm done 4/28/2016 @ 10:27am
+ * 3. REWRITE PRIVATE MEMBER TEMPLATES AS NON-MEMBER TEMPLATES SO THAT THEY APPLY TO SPACE<T,1> & SPACE<T,N>,
+ *    SIMILARLY TO THE COUT FUNCTION IMPLEMENTED IN SPACE.TPP decided no go as it would break encapsulation on base class pointers 4/28/2016 @ 10:31am
+ * 4. WRITE RESHAPE IN SPACE<T,N> FINISHed 4/29/2017 @ 10:18 am
+ */
+int main(int argc, char *argv[])
+{
+    //Test_Space_Rank_0();
+    //Test_Space_Rank_1();
+    Test_Space_Rank_Greater_Than_2();
+    //Push_Back_Benchmark();
+    return 0;
+}
+void Test_Space_Rank_0()
+{
+    Space<int,0> s0;
+    s0.set(30);
+    std::cout<<s0.get()<<"\n";
+    std::cout<<"s0: "<<s0;
+    Space<int,0> s0copy(s0);
+    std::cout<<"s0copy: "<<s0copy;
+    Space<int,0> s0move(std::move(s0));
+    std::cout<<"s0move: "<<s0move;
+    std::cout<<"s0: "<<s0;
+    Space<int,0> s0copyAssign=s0copy;
+    std::cout<<"s0copyAssign: "<<s0copyAssign;
+    Space<int,0> s0moveAssign=std::move(s0copyAssign);
+    std::cout<<"s0moveAssign: "<<s0moveAssign;
+    std::cout<<"s0copyAssign: "<<s0copyAssign;
+}
+void Test_Space_Rank_1()
+{
+    Space<lluint,1> t1;
+    vector<lluint> v1;
+    std::cout<<"t1 default constructor: "<<t1;
+    std::cout<<"\nt1 default constructor size: "<<t1.size();
+    std::cout<<"\nt1 default constructor capacity: "<<t1.capacity();
+    Space<lluint,1> t1n(7);
+    std::cout<<"\nt1n empty: "<<t1n.empty();
+    std::cout<<"\nt1n constructor: "<<t1n;
+    std::cout<<"\nt1n constructor size : "<<t1n.size();
+    std::cout<<"\nt1n constructor capacity : "<<t1n.capacity();
+    t1n.emplace_back(3);
+    for(lluint i =0; i < limit;++i)
+        t1n.emplace_back(4);
+    std::cout<<"\nt1n size : "<<t1n.size();
+    std::cout<<"\nt1n capacity : "<<t1n.capacity();
+    std::cout<<"\nt1n: "<<t1n;
+
+    Space<lluint,1> t1CopyCtor(t1n);
+    std::cout<<"t1CopyCtor : "<<t1CopyCtor;
+    std::cout<<"\nt1CopyCtor size : "<<t1CopyCtor.size();
+    std::cout<<"\nt1CopyCtor capacity : "<<t1CopyCtor.capacity();
+    std::cout<<"\nt1CopyCtor: "<<t1CopyCtor;
+
+    for(lluint i =0; i < limit;++i)
+        t1n.clear();
+    std::cout<<"\nt1n size : "<<t1n.size();
+    std::cout<<"\nt1n capacity : "<<t1n.capacity();
+    std::cout<<"\nt1n: "<<t1n;
+
+    t1CopyCtor.assign(30,40);
+    std::cout<<"\nt1CopyCtor size : "<<t1CopyCtor.size();
+    std::cout<<"\nt1CopyCtor capacity : "<<t1CopyCtor.capacity();
+    std::cout<<"\nt1CopyCtor: "<<t1CopyCtor;
+
+    Space<lluint,1> t1MoveCtor(std::move(t1CopyCtor));
+    std::cout<<"\nt1CopyCtor size : "<<t1CopyCtor.size();
+    std::cout<<"\nt1CopyCtor capacity : "<<t1CopyCtor.capacity();
+    std::cout<<"\nt1CopyCtor: "<<t1CopyCtor;
+
+    std::cout<<"\nt1MoveCtor size : "<<t1MoveCtor.size();
+    std::cout<<"\nt1MoveCtor capacity : "<<t1MoveCtor.capacity();
+    std::cout<<"\nt1MoveCtor: "<<t1MoveCtor;
+
+    t1MoveCtor.clear();
+
+    std::cout<<"\nt1MoveCtor size : "<<t1MoveCtor.size();
+    std::cout<<"\nt1MoveCtor capacity : "<<t1MoveCtor.capacity();
+    std::cout<<"\nt1MoveCtor: "<<t1MoveCtor;
+    lluint y=10;
+    Space<lluint,1> t1LValueCtor(y,y);
+    std::cout<<"\nt1LValueCtor size : "<<t1LValueCtor.size();
+    std::cout<<"\nt1LValueCtor capacity : "<<t1LValueCtor.capacity();
+    std::cout<<"\nt1LValueCtor: "<<t1LValueCtor;
+
+    Space<lluint,1> t1RValueCtor(8,8);
+    std::cout<<"\nt1RValueCtor size : "<<t1RValueCtor.size();
+    std::cout<<"\nt1RValueCtor capacity : "<<t1RValueCtor.capacity();
+    std::cout<<"\nt1RValueCtor: "<<t1RValueCtor;
+
+    Space<lluint,1> t1CopyAssign;
+    t1CopyAssign = t1RValueCtor;
+    std::cout<<"\nt1CopyAssign size : "<<t1CopyAssign.size();
+    std::cout<<"\nt1CopyAssign capacity : "<<t1CopyAssign.capacity();
+    std::cout<<"\nt1CopyAssign: "<<t1CopyAssign;
+
+    Space<lluint,1> t1MoveAssign=std::move(t1CopyAssign);
+    std::cout<<"\nt1CopyAssign size : "<<t1CopyAssign.size();
+    std::cout<<"\nt1CopyAssign capacity : "<<t1CopyAssign.capacity();
+    std::cout<<"\nt1CopyAssign: "<<t1CopyAssign;
+
+    std::cout<<"\nt1MoveAssign size : "<<t1MoveAssign.size();
+    std::cout<<"\nt1MoveAssign capacity : "<<t1MoveAssign.capacity();
+    std::cout<<"\nt1MoveAssign: "<<t1MoveAssign;
+
+    for(lluint i=0; i<20;++i)
+        t1MoveAssign.push_back((i));
+    t1CopyAssign = t1MoveAssign;
+
+    std::cout<<"\nt1MoveAssign size : "<<t1MoveAssign.size();
+    std::cout<<"\nt1MoveAssign capacity : "<<t1MoveAssign.capacity();
+    std::cout<<"\nt1MoveAssign: "<<t1MoveAssign;
+
+    t1MoveAssign.erase(t1MoveAssign.begin()+ 8);
+
+    std::cout<<"\nt1MoveAssign size : "<<t1MoveAssign.size();
+    std::cout<<"\nt1MoveAssign capacity : "<<t1MoveAssign.capacity();
+    std::cout<<"\nt1MoveAssign: "<<t1MoveAssign;
+    t1MoveAssign.erase(t1MoveAssign.begin()+7,t1MoveAssign.end()-9);
+
+    std::cout<<"\nt1MoveAssign size : "<<t1MoveAssign.size();
+    std::cout<<"\nt1MoveAssign capacity : "<<t1MoveAssign.capacity();
+    std::cout<<"\nt1MoveAssign: "<<t1MoveAssign;
+
+    t1MoveAssign.insert(t1MoveAssign.begin()+5,t1n.begin()+7,t1n.begin()+9);
+
+    std::cout<<"\nt1MoveAssign size : "<<t1MoveAssign.size();
+    std::cout<<"\nt1MoveAssign capacity : "<<t1MoveAssign.capacity();
+    std::cout<<"\nt1MoveAssign: "<<t1MoveAssign;
+
+    t1MoveAssign.shrink_to_fit();
+
+    std::cout<<"\nt1MoveAssign size : "<<t1MoveAssign.size();
+    std::cout<<"\nt1MoveAssign capacity : "<<t1MoveAssign.capacity();
+    std::cout<<"\nt1MoveAssign: "<<t1MoveAssign;
+
+    Space<lluint,1> t1InitListCtor({1,2,3,4,5,6,7,8,9,10});
+    std::cout<<"\nt1InitListCtor size : "<<t1InitListCtor.size();
+    std::cout<<"\nt1InitListCtor capacity : "<<t1InitListCtor.capacity();
+    std::cout<<"\nt1InitListCtor: "<<t1InitListCtor;
+
+    Space<lluint,1> t1AssignInitList = {11,12,13,14,15,16,17,18,19,20};
+    std::cout<<"\nt1AssignInitList size : "<<t1AssignInitList.size();
+    std::cout<<"\nt1AssignInitList capacity : "<<t1AssignInitList.capacity();
+    std::cout<<"\nt1AssignInitList: "<<t1AssignInitList;
+    Space<lluint,1>::reverse_iterator rIter=t1AssignInitList.rbegin();
+    for(;rIter!=t1AssignInitList.rend();++rIter)
+        std::cout<<*rIter<<" ";
+    Space<lluint,1> t1RangeCtor(t1MoveAssign.begin(),t1MoveAssign.end());
+    std::cout<<"\nt1RangeCtor size : "<<t1RangeCtor.size();
+    std::cout<<"\nt1RangeCtor capacity : "<<t1RangeCtor.capacity();
+    std::cout<<"\nt1MoveAssign size: "<<t1MoveAssign.size();
+    std::cout<<"\nt1RangeCtor: "<<t1RangeCtor;
+
+    Space<lluint,1> t1AssignTest;
+    std::cout<<"\nt1AssignTest size : "<<t1AssignTest.size();
+    std::cout<<"\nt1AssignTest capacity : "<<t1AssignTest.capacity();
+    std::cout<<"\nt1AssignTest size: "<<t1AssignTest.size();
+    std::cout<<"\ntt1AssignTest: "<<t1AssignTest;
+
+    t1AssignTest.assign(t1MoveAssign.begin(),t1MoveAssign.end());
+    std::cout<<"\nt1AssignTest size : "<<t1AssignTest.size();
+    std::cout<<"\nt1AssignTest capacity : "<<t1AssignTest.capacity();
+    std::cout<<"\nt1AssignTest: "<<t1AssignTest;
+
+    t1AssignTest.assign({1,2,3});
+    std::cout<<"\nt1AssignTest size : "<<t1AssignTest.size();
+    std::cout<<"\nt1AssignTest capacity : "<<t1AssignTest.capacity();
+    std::cout<<"\nt1AssignTest: "<<t1AssignTest;
+
+    t1AssignTest.pop_front();
+
+    std::cout<<"\nt1AssignTest size : "<<t1AssignTest.size();
+    std::cout<<"\nt1AssignTest capacity : "<<t1AssignTest.capacity();
+    std::cout<<"\nt1AssignTest: "<<t1AssignTest;
+
+    Space<lluint,1> s1ResizeTest(7);
+    for(lluint i =0; i<s1ResizeTest.size();++i)
+    {
+        s1ResizeTest[i] = i+1;
+    }
+    std::cout<<"\ns1ResizeTest size: "<<s1ResizeTest.size();
+    std::cout<<"\ns1ResizeTest capacity: "<<s1ResizeTest.capacity();
+    lluint resize= 30;
+    s1ResizeTest.resize(resize);
+    std::cout<<"\ns1ResizeTest size: "<<s1ResizeTest.size();
+    std::cout<<"\n"<<s1ResizeTest;
+    s1ResizeTest.resize(5);
+    std::cout<<"\n"<<s1ResizeTest;
+
+
+}
+void Test_Space_Rank_Greater_Than_2()
+{
+    //N dimensional Space are no larger than deque
+    std::cout<<"\nsize of deque: "<<sizeof(std::deque<lluint>(18));
+    std::cout<<"\nsize of vector: "<<sizeof(std::vector<lluint>(18));
+    std::cout<<"\nsize of Space: "<<sizeof(Space<lluint,4>(3,7,9,30));
+
+    Space<lluint,3> s3_default_constructor;
+    std::cout<<"\ns3 default constructor: "<<s3_default_constructor;
+    for(lluint i =0; i < 15;++i)
+        s3_default_constructor.emplace_back(i);
+    std::cout<<"\ns3 default constructor size: "<<s3_default_constructor.size();
+    std::cout<<"\ns3 default constructor capacity: "<<s3_default_constructor.capacity();
+    //line below is correct, their should be a runtime error when the dimensions of the space have not been specified
+	//std::cout<<"\ns3 default constructor dimensions: "<<s3_default_constructor.dimensions();
+    std::cout<<"\ns3 default constructor: "<<s3_default_constructor;
+    std::cout<<"\ns3 default constructor size: "<<s3_default_constructor.size();
+    std::cout<<"\ns3 default constructor capacity: "<<s3_default_constructor.capacity();
+
+    Space<lluint,3> t3VariadicCtor(3,2,3);
+    std::cout<<"\ns3 variadic constructor:\n "<<t3VariadicCtor;
+    std::cout<<"\ns3 variadic constructor size: "<<t3VariadicCtor.size();
+    std::cout<<"\ns3 vardiac constructor capacity: "<<t3VariadicCtor.capacity();
+    Space<lluint,1,std::allocator<lluint>> indices = t3VariadicCtor.dimensions();
+    Space<lluint,1> indices_stdAlloc=t3VariadicCtor.dimensions();
+    /*work on conversion between Spaces of same type but different allocators 4/29/2017
+	  Space<lluint,1,TestAllocator<lluint>> indicesAlloc = t3VariadicCtor.dimensions();
+	  Rather than use the line above the same can be accomplished with the line below using
+	  indicesAlloc, as noted on stackoverflow @ https://stackoverflow.com/questions/8190889/converting-between-vectors-with-different-allocators
+    */
+	Space<lluint,1,TestAllocator<lluint>> indicesAlloc(indices.begin(),indices.end());
+	cout<<"\nindices\n"<<indices;
+	cout<<"indicesAlloc\n"<<indicesAlloc;
+
+    std::mt19937 mt;
+    std::uniform_int_distribution<int> dist(0,50);
+    for(std::size_t i=0; i<indices[0];++i)
+    {
+        for(std::size_t j=0; j<indices[1];++j)
+        {
+            for(std::size_t k=0; k<indices[2];++k)
+            {
+                t3VariadicCtor[i][j][k]=dist(mt);
+            }
+        }
+    }
+
+    for(std::size_t i=0; i<indices[0];++i)
+    {
+        for(std::size_t j=0; j<indices[1];++j)
+        {
+            for(std::size_t k=0; k<indices[2];++k)
+            {
+                std::cout<<"t3n["<<i<<"]["<<j<<"]["<<k<<"]: "<<t3VariadicCtor[i][j][k]<<"\n";
+            }
+        }
+    }
+    t3VariadicCtor[0][1][1] = 100;
+    std::cout<<"\nt3n variadic constructor:\n"<<t3VariadicCtor;
+    Space<lluint,3> s3CopyCtor(t3VariadicCtor);
+    std::cout<<"s3CopyCtor:\n"<<s3CopyCtor;
+    std::cout<<"s3CoptyCtor size: "<<s3CopyCtor.size();
+    std::cout<<"\ns3CoptyCtor capacity: "<<s3CopyCtor.capacity();
+    std::cout<<"\ns3CoptyCtor dimension:\n"<<s3CopyCtor.dimensions();
+    std::cout<<"\n"<<s3CopyCtor[0][1][1]<<" "<<s3CopyCtor[1][1][0];
+
+    Space<lluint,1> aslice_variadic(s3CopyCtor.slice(0,1,1,1,1,0));
+    std::cout<<"aslice:\n"<<aslice_variadic;
+    Space<lluint,1> aslice_iterator(s3CopyCtor.begin()+4,s3CopyCtor.begin()+9);
+    std::cout<<"aslice:\n"<<aslice_variadic;
+
+    s3CopyCtor.reshape(5,5,5);
+    std::cout<<"s3CoptyCtory size: "<<s3CopyCtor.size()<<"\n";
+    std::cout<<"S3CopyCtor:\n"<<s3CopyCtor;
+    Space<lluint,1> new_shape1(3,1);
+    s3CopyCtor.reshape(new_shape1);
+    std::cout<<"s3CoptyCtory size: "<<s3CopyCtor.size()<<"\n";
+    std::cout<<"S3CopyCtor:\n"<<s3CopyCtor;
+    Space<unsigned int,1,TestAllocator<unsigned int>> new_shape2(3,2);
+    s3CopyCtor.reshape(new_shape2);
+    std::cout<<"s3CoptyCtory size: "<<s3CopyCtor.size()<<"\n";
+    std::cout<<"S3CopyCtor:\n"<<s3CopyCtor;
+    s3CopyCtor.reshape(Space<unsigned int,1>(3,3));
+    std::cout<<"s3CoptyCtory size: "<<s3CopyCtor.size()<<"\n";
+    std::cout<<"S3CopyCtor:\n"<<s3CopyCtor;
+
+
+    Space<lluint,3> s3MoveCtor(std::move(s3CopyCtor));
+
+    std::cout<<"\ns3MoveCtor size : "<<s3MoveCtor.size();
+    std::cout<<"\ns3MoveCtor capacity : "<<s3MoveCtor.capacity();
+    std::cout<<"\ns3MoveCtor: "<<s3MoveCtor;
+
+    s3MoveCtor.clear();
+
+    std::cout<<"\ns3MoveCtor size : "<<s3MoveCtor.size();
+    std::cout<<"\ns3MoveCtor capacity : "<<s3MoveCtor.capacity();
+    std::cout<<"\ns3MoveCtor: "<<s3MoveCtor;
+
+    Space<lluint,3> s3CopyAssign;
+    s3CopyAssign = s3MoveCtor;
+    std::cout<<"\ns3CopyAssign size : "<<s3CopyAssign.size();
+    std::cout<<"\ns3CopyAssign capacity : "<<s3CopyAssign.capacity();
+    std::cout<<"\ns3CopyAssign: "<<s3CopyAssign;
+
+    Space<lluint,3> s3MoveAssign=std::move(s3CopyAssign);
+    std::cout<<"\ns3CopyAssign size : "<<s3CopyAssign.size();
+    std::cout<<"\ns3CopyAssign capacity : "<<s3CopyAssign.capacity();
+    std::cout<<"\ns3CopyAssign: "<<s3CopyAssign;
+
+    std::cout<<"\ns3MoveAssign size : "<<s3MoveAssign.size();
+    std::cout<<"\ns3MoveAssign capacity : "<<s3MoveAssign.capacity();
+    std::cout<<"\ns3MoveAssign: "<<s3MoveAssign;
+
+    for(lluint i=0; i<20;++i)
+        s3MoveAssign.push_back((i));
+    s3CopyAssign = s3MoveAssign;
+
+    std::cout<<"\ns3MoveAssign size : "<<s3MoveAssign.size();
+    std::cout<<"\ns3MoveAssign capacity : "<<s3MoveAssign.capacity();
+    std::cout<<"\ns3MoveAssign: "<<s3MoveAssign;
+
+    s3MoveAssign.erase(s3MoveAssign.begin()+ 8);
+
+    std::cout<<"\ns3MoveAssign size : "<<s3MoveAssign.size();
+    std::cout<<"\ns3MoveAssign capacity : "<<s3MoveAssign.capacity();
+    std::cout<<"\ns3MoveAssign: "<<s3MoveAssign;
+    s3MoveAssign.erase(s3MoveAssign.begin()+7,s3MoveAssign.end()-9);
+
+    std::cout<<"\ns3MoveAssign size : "<<s3MoveAssign.size();
+    std::cout<<"\ns3MoveAssign capacity : "<<s3MoveAssign.capacity();
+    std::cout<<"\ns3MoveAssign: "<<s3MoveAssign;
+
+    s3MoveAssign.insert(s3MoveAssign.begin()+5,t3VariadicCtor.begin()+1,t3VariadicCtor.begin()+2);
+
+    std::cout<<"\ns3MoveAssign size : "<<s3MoveAssign.size();
+    std::cout<<"\ns3MoveAssign capacity : "<<s3MoveAssign.capacity();
+    std::cout<<"\ns3MoveAssign: "<<s3MoveAssign;
+
+    s3MoveAssign.shrink_to_fit();
+
+    std::cout<<"\ns3MoveAssign size : "<<s3MoveAssign.size();
+    std::cout<<"\ns3MoveAssign capacity : "<<s3MoveAssign.capacity();
+    std::cout<<"\ns3MoveAssign: "<<s3MoveAssign;
+
+    Space<lluint,3> s3InitListCtor({1,2,3,4,5,6,7,8,9,10});
+    std::cout<<"\ns3InitListCtor size : "<<s3InitListCtor.size();
+    std::cout<<"\ns3InitListCtor capacity : "<<s3InitListCtor.capacity();
+    std::cout<<"\ns3InitListCtor: "<<s3InitListCtor;
+
+    Space<lluint,3> s3AssignInitList = {11,12,13,14,15,16,17,18,19,20};
+    std::cout<<"\ns3AssignInitList size : "<<s3AssignInitList.size();
+    std::cout<<"\ns3AssignInitList capacity : "<<s3AssignInitList.capacity();
+    std::cout<<"\ns3AssignInitList: "<<s3AssignInitList;
+    Space<lluint,3>::reverse_iterator rIter=s3AssignInitList.rbegin();
+    for(;rIter!=s3AssignInitList.rend();++rIter)
+        std::cout<<*rIter<<" ";
+    Space<lluint,3> s3RangeCtor(s3MoveAssign.begin(),s3MoveAssign.end());
+    std::cout<<"\ns3RangeCtor size : "<<s3RangeCtor.size();
+    std::cout<<"\ns3RangeCtor capacity : "<<s3RangeCtor.capacity();
+    std::cout<<"\ns3MoveAssign size: "<<s3MoveAssign.size();
+    std::cout<<"\ns3RangeCtor: "<<s3RangeCtor;
+
+    Space<lluint,3> s3AssignTest;
+    std::cout<<"\ns3AssignTest size : "<<s3AssignTest.size();
+    std::cout<<"\ns3AssignTest capacity : "<<s3AssignTest.capacity();
+    std::cout<<"\ns3AssignTest size: "<<s3AssignTest.size();
+    std::cout<<"\nts3AssignTest: "<<s3AssignTest;
+
+    s3AssignTest.assign(s3MoveAssign.begin(),s3MoveAssign.end());
+    std::cout<<"\ns3AssignTest size : "<<s3AssignTest.size();
+    std::cout<<"\ns3AssignTest capacity : "<<s3AssignTest.capacity();
+    std::cout<<"\ns3AssignTest: "<<s3AssignTest;
+
+    s3AssignTest.assign({1,2,3});
+    std::cout<<"\ns3AssignTest size : "<<s3AssignTest.size();
+    std::cout<<"\ns3AssignTest capacity : "<<s3AssignTest.capacity();
+    std::cout<<"\ns3AssignTest: "<<s3AssignTest;
+
+    s3AssignTest.pop_front();
+
+    std::cout<<"\ns3AssignTest size : "<<s3AssignTest.size();
+    std::cout<<"\ns3AssignTest capacity : "<<s3AssignTest.capacity();
+    std::cout<<"\ns3AssignTest: "<<s3AssignTest;
+
+	/*Sequence_Container<int,3> ash(1,2,3);
+    int sum=0;
+    std::cout<<"\n";
+    ash.expand_sequence([&sum](int x, int y, int z){sum+=x,sum+=y,sum+=z;});
+    for(unsigned int i=0; i<ash.data.size();++i)
+        std::cout<<ash.data[i]<<" ";
+    std::cout<<"\nsum: "<<sum<<"\n";
+
+    std::complex<double> c1=1. +1i,c2 = 1. + 2i,c3=1. + 3i;
+    std::complex<double>sigma = 1i;
+    Sequence_Container<std::complex<double>,3> test(c1,c2,c3);
+    test.expand_sequence([&sigma](std::complex<double> a, std::complex<double> b, std::complex<double> c){sigma += a   ,sigma += b,sigma += c;});
+    for(unsigned int i=0; i<test.data.size();++i)
+        std::cout<<test.data[i]<<" ";
+    std::cout<<"\nsigma: "<<sigma<<"\n";*/
+
+}
+void Push_Back_Benchmark()
+{
+    Space<lluint,1> t1;
+    Space<lluint,1> t2;
+    Space<lluint,1> t3;
+    vector<lluint> v1;
+    vector<lluint> v2;
+    vector<lluint> v3;
+    std::cout<<"size of Space<int,1>: "<<sizeof(t1)<<"\n";
+    std::cout<<"size of Vector<int>: "<<sizeof(v1)<<"\n";
+    SteadyTimer<std::chrono::steady_clock,std::milli> benchmark;
+
+    benchmark.start();
+    for(lluint i=0; i<limit;++i)
+    {
+       t1.push_back(i);
+    }
+    benchmark.end();
+    cout<<"Rank 1 Space t1 Push_Back-> "<<benchmark;
+
+    benchmark.start();
+    for(lluint i=0; i<limit;++i)
+    {
+        v1.push_back(i);
+    }
+    benchmark.end();
+    cout<<"Vector v1 push_back-> "<<benchmark;
+
+    benchmark.start();
+    for(lluint i=0; i<limit;++i)
+    {
+        t2.push_back(i);
+    }
+    benchmark.end();
+    cout<<"Rank 1 Space t2 Push_Back-> "<<benchmark;
+
+    benchmark.start();
+    for(lluint i=0; i<limit;++i)
+    {
+        v2.push_back(i);
+    }
+    benchmark.end();
+    cout<<"Vector v2 push_back-> "<<benchmark;
+
+    benchmark.start();
+    for(lluint i=0; i<limit;++i)
+    {
+        t3.push_back(i);
+    }
+    benchmark.end();
+    cout<<"Rank 1 Space t3 Push_Back-> "<<benchmark;
+
+    benchmark.start();
+    for(lluint i=0; i<limit;++i)
+    {
+        v2.push_back(i);
+    }
+    benchmark.end();
+    cout<<"Vector v3 push_back-> "<<benchmark;
+
+    benchmark.start();
+    lluint *a1= new lluint [limit];
+    for(lluint i=0; i<limit;++i)
+    {
+        a1[i]=i;
+    }
+    benchmark.end();
+    cout<<"Generic array-> "<<benchmark;
+
+    delete [] a1;
+}

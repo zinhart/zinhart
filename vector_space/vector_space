@@ -1,0 +1,11 @@
+#ifndef VECTOR_SPACE
+#define VECTOR_SPACE
+#include "./config"
+#include "./declarations"
+#include "./zinhart_traits"
+#include "./iterator"
+#include "./utility"
+#include "./src/vector_space_r0.tpp"
+#include "./src/vector_space_r1.tpp"
+#include "./src/vector_space_rn.tpp"
+#endif /* VECTOR_SPACE */

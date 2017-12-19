@@ -1,0 +1,4 @@
+#ifndef DECLARATIONS
+#define DECLARATIONS
+#include "./inc/declarations.h"
+#endif /* DECLARATIONS */

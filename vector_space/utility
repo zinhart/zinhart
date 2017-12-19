@@ -1,0 +1,6 @@
+#ifndef UTILITY
+#define UTILITY
+#include "./declarations"
+#include "./zinhart_traits"
+#include "./inc/utility.h"
+#endif /* UTILITY */
