@@ -1,0 +1,4 @@
+#ifndef BYTE_PACKER
+#define BYTE_PACKER
+#include "./inc/byte_packer.h"
+#endif

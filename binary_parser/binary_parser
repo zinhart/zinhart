@@ -1,0 +1,5 @@
+#ifndef BINARY_PARSER
+#define BINARY_PARSER
+#include "./byte_packer"
+#include "./inc/binary_parser.h"
+#endif
