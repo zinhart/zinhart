@@ -1,5 +1,5 @@
-#ifndef BYTE_PACKER_H
-#define BYTE_PACKER_H
+#ifndef BYTE_PACKER_HH
+#define BYTE_PACKER_HH
 #include <algorithm>
 #include <cstdint>
 namespace zinhart

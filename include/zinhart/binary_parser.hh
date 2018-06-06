@@ -1,5 +1,5 @@
-#ifndef BINARY_PARSER_H
-#define BINARY_PARSER_H
+#ifndef BINARY_PARSER_HH
+#define BINARY_PARSER_HH
 //#include <experimental/filesystem> perhaps when its not experimental
 #include <fstream>
 #include <regex>
@@ -299,4 +299,4 @@ namespace zinhart
 	  };
   }
 }
-#endif //BINARY_PARSER_H
+#endif //BINARY_PARSER_HH
