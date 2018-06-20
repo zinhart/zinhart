@@ -43,7 +43,7 @@ find_package(Threads REQUIRED)
 
 
 # set include paths
-include_directories(. include
+include_directories(. include)
 
 # set cxx standard
 set(CMAKE_CXX_STANDARD 11)
@@ -72,13 +72,12 @@ if (BuildTest)
 endif ()
 
 message(STATUS "")
-message(STATUS "BUILD SUMMARY")
+message(STATUS "  BUILD SUMMARY")
 message(STATUS "  CMAKE_GENERATOR       : ${CMAKE_GENERATOR}")
 message(STATUS "  Compiler ID           : ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "  Build type            : ${CMAKE_BUILD_TYPE}")
 message(STATUS "  Library type          : ${LIB_TYPE}")
 message(STATUS "  Build tests           : ${BuildTest}")
-#message(STATUS "  Build benchmarks     : ${BuildBench}")
 message(STATUS "  Sanitize flags        : ${Sanitize}")
 message(STATUS "  CXX_FLAGS             : ${CMAKE_CXX_FLAGS}")
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "RELEASE")

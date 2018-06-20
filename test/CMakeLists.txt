@@ -1,4 +1,4 @@
-add_library(gtest_ann ./gtest/gtest-all.cc)
+add_library(gtest_zinhart ./gtest/gtest-all.cc)
 include_directories(.)
 target_link_libraries(gtest_zinhart ${CMAKE_THREAD_LIBS_INIT})
 
@@ -9,7 +9,7 @@ set(test_src
 
 add_executable(zinhart_tests ${test_src})
 
-target_link_libraries(ann_tests
+target_link_libraries(zinhart_tests
   gtest_zinhart
   zinhart
   ${CMAKE_THREAD_LIBS_INIT}

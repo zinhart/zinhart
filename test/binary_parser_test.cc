@@ -4,6 +4,8 @@
 #include <vector>
 //#include "csv_parser.h"
 #include "zinhart/binary_parser.hh"
+#include <fstream>
+#include <string>
 //#include <zinhart/vector_space>
 
 TEST(binary_parser_test, ascii)
@@ -13,16 +15,16 @@ TEST(binary_parser_test, ascii)
   fmt.set_delimeters('#',',','\n');
   binary_parser<ASCII> p;
   std::vector<char> a({'a','b','c','d'});
-  fstream strm;
-  string file("ascii");
+  std::fstream strm;
+  std::string file("ascii");
   p.write(strm,fmt,a,file);
   std::vector<std::string> vec;
   p.read(strm,fmt,vec,file);
   std::for_each(vec.begin(),vec.end(),[&vec](std::string & init){std::cout<<init<<"\n";});
-  string iris_data_set("training-data/iris-flower-data-set");
+  std::string iris_data_set("training-data/iris-flower-data-set");
   p.read(strm,vec,iris_data_set,'\n', [](std::string & init){init.insert(0,",");std::rotate(init.begin(),init.begin()+17,init.end());init.pop_back();});
   std::for_each(vec.begin(),vec.end(),[&vec](std::string & init){std::cout<<init<<"\n";});
-  string iris("encoded-iris-data-set-ascii");
+  std::string iris("encoded-iris-data-set-ascii");
  // p.write(strm,fmt,vec,",",iris);
 }
 
@@ -82,14 +84,14 @@ TEST(binary_parser_test, mnist_test)
   prep.read(strm, file, copied_image_set,std::uint8_t(), 24);// read in images themselves in new binary
   std::cout<<"Header/Magic Num Copy: "<<zinhart<< " info: "<<info_copy<<"\n"; 
   //loop is for visualizing
-  for(std::uint32_t i = 0,start = 0, size = 784, stride = 1; i < 2/*count*/; ++i, start+=784)
+  for(std::uint32_t i = 0,start = 0, size = 784, stride = 1; i < 2count; ++i, start+=784)
   {
 	auto img_slice = copied_image_set.slice(start,size,stride); 
 	vector_space<std::uint32_t,2> image(28,28);
 	image.assign(img_slice.begin(),img_slice.end());
 	std::cout<<image;
   }
-/*  //validate copy
+  //validate copy
   for (std::uint32_t i = 0; i < 10000; ++i)
 	for(std::uint32_t j = 0; j < 784; ++j)
 	  assert(original_image_set[i][j] == copied_image_set[i][j]);
