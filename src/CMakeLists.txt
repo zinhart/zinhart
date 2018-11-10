@@ -6,6 +6,7 @@ set(zinhart_lib
  #link cpu threading library
  target_link_libraries(
  zinhart 
+ multi_core
  ${CMAKE_THREAD_LIBS_INIT}
 )
 
