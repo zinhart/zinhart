@@ -23,15 +23,16 @@ def handle_build(args):
     if args.shared == True:
         cmake_cmd.append("-DBuildShared=ON")
         print ("Got shared")
-
+    if args.bench_marks == True:
+        cmake_cmd.append("-DBuildBenchmarks=ON")
+    else:
+        cmake_cmd.append("-DBuildBenchmarks=OFF")
     if args.cuda == True:
         cmake_cmd.append("-DBuildCuda=ON")
         print ("Got cuda")
     else:
         print ("Not cuda")
         cmake_cmd.append("-DBuildCuda=OFF")
-
-
     if args.code_coverage == True:
         cmake_cmd.append("-DZinhartUseCodeCoverage=ON")
         print("Got code_coverage")
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     build_parser.add_argument('-r', '--release', type=str,                        help = 'build zinhart in release mode')
     build_parser.add_argument('-st', '--static',           action = 'store_true', help = 'build zinhart as a static library')
     build_parser.add_argument('-sh', '--shared',           action = 'store_true', help = 'build zinhart as a shared library')
+    build_parser.add_argument('-b', '--bench_marks',       action = 'store_true', help = 'build zinhart with with benchmarks')
     build_parser.add_argument('-cu', '--cuda',             action = 'store_true', help = 'build zinhart with cuda enabled')
     build_parser.add_argument('-cc', '--code_coverage',    action = 'store_true', help = 'clean zinhart build directories')
     build_parser.add_argument('-c', '--clean',             action = 'store_true', help = 'clean zinhart build directories')
