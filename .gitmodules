@@ -1,0 +1,6 @@
+[submodule "multi_core"]
+	path = multi_core
+	url = git@github.com:zinhart/multi_core.git
+[submodule "ann"]
+	path = ann
+	url = git@github.com:zinhart/ann.git
