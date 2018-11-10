@@ -1,7 +1,8 @@
 import argparse
 import sys
 import os
-import multiprocess
+import subprocess
+#import codecs
 
 subcommands = ['build']
 modules     = ['ann', 'multi_core']
@@ -14,12 +15,6 @@ def handle_build(args):
     cmake = None
     cmake_cmd = []
     shell = None
-    if sys.platform.startswith('win'):
-        cmake = "cmake.exe"
-        shell = True
-    else:
-        cmake = "cmake"
-        shell = False
 
 
     if args.static == True:
@@ -50,8 +45,19 @@ def handle_build(args):
     if args.debug != None:
         if not os.path.exists(args.debug):
             os.makedirs(args.debug)
-        # invoke cmake with args
-        print("Got debug")
+        shell = None
+        if sys.platform.startswith('win'):
+            cmake = "cmake.exe"
+            shell = True
+        else:
+            cwd   = os.getcwd()
+            cmake_cmd.insert(0, "cmake")
+            cmake_cmd.insert(1, "-B" + cwd + "/" + args.debug)
+            cmake_cmd.insert(2, "-H" + cwd)
+            cmake_cmd.insert(3, "-DCMAKE_BUILD_TYPE=DEBUG")
+            shell = False
+        print(cmake_cmd)
+        ret = subprocess.check_call(cmake_cmd, shell, stderr=subprocess.STDOUT)
     if args.release != None:
         if not os.path.exists(args.release):
             os.makedirs(args.release)
