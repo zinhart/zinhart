@@ -10,6 +10,10 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RELEASE")
 endif()
 
+# add subdirectory multi_core
+add_subdirectory(multi_core)
+
+
 # useful macros to check against
 add_definitions(-DZINHART_ENABLED=true)
 add_definitions(-DZINHART_DISABLED=false)
@@ -80,7 +84,7 @@ if(BuildCuda)
   endif()
   
   # set include paths
-  include_directories(. include include/multi_core/ ${CUDA_INCLUDE_DIRS} "${PROJECT_BINARY_DIR}")
+  include_directories(. include multi_core/include ${CUDA_INCLUDE_DIRS} "${PROJECT_BINARY_DIR}")
 else()
   string(REGEX MATCH "CUDA_ENABLED" result "${COMPILE_DEFINITIONS}")
   if(${result} MATCHES "CUDA_ENABLED")
@@ -88,7 +92,7 @@ else()
 	add_definitions(-DCUDA_ENABLED=false)
   endif()
   # set include paths
-  include_directories(. include multi_core/include/multi_core/ "${PROJECT_BINARY_DIR}")
+  include_directories(. include "${MULTI_CORE_INCLUDE_DIR}" "${PROJECT_BINARY_DIR}")
 endif()
 
 
@@ -113,8 +117,6 @@ if (Sanitize)
   set(CMAKE_CXX_FLAGS "-fsantize=address -fsanitize=undefined ${CMAKE_CXX_FLAGS}")
 endif()
 
-# add subdirectory multi_core
-add_subdirectory(multi_core)
 
 # add src directory
 add_subdirectory(src)

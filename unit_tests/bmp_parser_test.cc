@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
-//using namespace testing;
-TEST(bitmap_parser_test,ascii)
+#include <zinhart/zinhart.hh>
+
+TEST(bitmap_parser_test, ascii)
 {
   /*
   using namespace zinhart;
