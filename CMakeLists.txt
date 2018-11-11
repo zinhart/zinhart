@@ -23,7 +23,7 @@ option(BuildCuda "BuildCuda" ON)
 # library type
 option(BuildShared "BuildShared" OFF)
 # nesting protection
-option(MultiCoreUseCodeCoverage "ZINHARTUseCodeCoverage" ON)
+option(MultiCoreUseCodeCoverage "ZinhartUseCodeCoverage" ON)
 # sanitizer support
 option(Sanitize "Sanitize" OFF)
 

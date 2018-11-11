@@ -1,11 +1,11 @@
-#ifndef BINARY_PARSER_HH
-#define BINARY_PARSER_HH
+#ifndef BMP_PARSER_HH
+#define BMP_PARSER_HH
 //#include <experimental/filesystem> perhaps when its not experimental
 #include <fstream>
 #include <regex>
 namespace zinhart
 {
-  namespace file_io
+  namespace bmp
   {
   	enum file_type : char {ASCII = 0, BIN};
 	enum binary_file_format : char {GENERIC = 0, IDX = 1};
@@ -35,20 +35,20 @@ namespace zinhart
 	};
 
 	template<file_type file>
-	  class binary_parser;
+	  class bmp_parser;
 
 	template<>
-	  class binary_parser<ASCII>
+	  class bmp_parser<ASCII>
 	  {
 		public:
 		  using uchar = std::uint8_t;
 		  using uint = std::uint32_t;
-		  binary_parser() = default;
-		  binary_parser(const binary_parser&) = default;
-		  binary_parser(binary_parser&&) = default;
-		  binary_parser & operator = (const binary_parser&) = default;
-		  binary_parser& operator = (binary_parser&&) = default;
-		  ~binary_parser() = default;
+		  bmp_parser() = default;
+		  bmp_parser(const bmp_parser&) = default;
+		  bmp_parser(bmp_parser&&) = default;
+		  bmp_parser & operator = (const bmp_parser&) = default;
+		  bmp_parser& operator = (bmp_parser&&) = default;
+		  ~bmp_parser() = default;
 		  template<class Container>
 			void write(std::fstream & file_handle, csv_format & fmt, const Container & c, const std::string & file)
 			{
@@ -154,17 +154,17 @@ namespace zinhart
 	  };
 
 	template<>
-	  class binary_parser<BIN>
+	  class bmp_parser<BIN>
 	  {
 		public:
 		  using uchar = std::uint8_t;
 		  using uint = std::uint32_t;
-		  binary_parser() = default;
-		  binary_parser(const binary_parser&) = default;
-		  binary_parser(binary_parser&&) = default;
-		  binary_parser & operator = (const binary_parser&) = default;
-		  binary_parser& operator = (binary_parser&&) = default;
-		  ~binary_parser() = default;
+		  bmp_parser() = default;
+		  bmp_parser(const bmp_parser&) = default;
+		  bmp_parser(bmp_parser&&) = default;
+		  bmp_parser & operator = (const bmp_parser&) = default;
+		  bmp_parser& operator = (bmp_parser&&) = default;
+		  ~bmp_parser() = default;
 
 		  template<class Container>
 			void write(std::fstream & file_handle,  std::string & file, Container & header)
@@ -236,7 +236,7 @@ namespace zinhart
 	  class csv_writer;
 
 	template<>
-	  class csv_writer<ASCII> : public binary_parser<ASCII> 
+	  class csv_writer<ASCII> : public bmp_parser<ASCII> 
 	  {
 		public:
 		  csv_writer() = default;
@@ -245,13 +245,13 @@ namespace zinhart
 		  csv_writer & operator =(const csv_writer&) = default;
 		  csv_writer& operator =(csv_writer&&) = default;
 		  ~csv_writer() = default;
-		  using binary_parser::write;
+		  using bmp_parser::write;
 		private:
-		  using binary_parser::read;
+		  using bmp_parser::read;
 	  };
 
 	template<>
-	  class csv_writer<BIN> : public binary_parser<BIN> 
+	  class csv_writer<BIN> : public bmp_parser<BIN> 
 	  {
 		public:
 		  csv_writer() = default;
@@ -260,16 +260,16 @@ namespace zinhart
 		  csv_writer & operator =(const csv_writer&) = default;
 		  csv_writer& operator =(csv_writer&&) = default;
 		  ~csv_writer() = default;
-		  using binary_parser::write;
+		  using bmp_parser::write;
 		private:
-		  using binary_parser::read;
+		  using bmp_parser::read;
 	  };
 
 	template<file_type file>
 	  class csv_reader;
 
 	template<>
-	  class csv_reader<ASCII> : public binary_parser<ASCII> 
+	  class csv_reader<ASCII> : public bmp_parser<ASCII> 
 	  {
 		public:
 		  csv_reader() = default;
@@ -278,13 +278,13 @@ namespace zinhart
 		  csv_reader & operator =(const csv_reader&) = default;
 		  csv_reader& operator =(csv_reader&&) = default;
 		  ~csv_reader() = default;
-		  using binary_parser::read;
+		  using bmp_parser::read;
 		private:
-		  using binary_parser::write;
+		  using bmp_parser::write;
 	  };
 
 	template<>
-	  class csv_reader<BIN> : public binary_parser<BIN> 
+	  class csv_reader<BIN> : public bmp_parser<BIN> 
 	  {
 		public:
 		  csv_reader() = default;
@@ -293,10 +293,10 @@ namespace zinhart
 		  csv_reader & operator =(const csv_reader&) = default;
 		  csv_reader& operator =(csv_reader&&) = default;
 		  ~csv_reader() = default;
-		  using binary_parser::read;
+		  using bmp_parser::read;
 		private:
-		  using binary_parser::write;
+		  using bmp_parser::write;
 	  };
-  }
-}
-#endif //BINARY_PARSER_HH
+  }// END NAMESPACE BMP
+}// END NAMESPACE ZINHART
+#endif //BITMAP_PARSER_HH
