@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include <zinhart/zinhart.hh>
-
-TEST(bitmap_parser_test, ascii)
+#include <vector>
+TEST(bitmap_parser_test, write_read_ascii)
 {
+  zinhart::bmp::bmp_parser<zinhart::bmp::ASCII> parser;
+  std::vector<char> a({'a','b','c','d'});
   /*
   using namespace zinhart;
   csv_format fmt;

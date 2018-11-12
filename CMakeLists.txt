@@ -12,6 +12,8 @@ endif()
 
 # add subdirectory multi_core
 add_subdirectory(multi_core)
+#
+add_subdirectory(ann)
 
 
 # useful macros to check against

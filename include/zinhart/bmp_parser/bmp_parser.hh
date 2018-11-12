@@ -50,7 +50,7 @@ namespace zinhart
 		  bmp_parser& operator = (bmp_parser&&) = default;
 		  ~bmp_parser() = default;
 		  template<class Container>
-			void write(std::fstream & file_handle, csv_format & fmt, const Container & c, const std::string & file)
+			void write(std::fstream & file_handle, csv_format & fmt/*const char delimiter*/, const Container & c, const std::string & file)
 			{
 			  static_assert(std::is_class<Container>::value && std::is_fundamental< typename Container::value_type>::value,"only containers of primitive types may be recieved as arguments to encode");  
 			  using iter =  typename Container::const_iterator;
@@ -74,7 +74,7 @@ namespace zinhart
 			  file_handle.close();
 			}
 		  template<template <typename> class Container>
-			void write(std::fstream & file_handle, csv_format & fmt, Container<std::string> & c, std::string delim, const std::string & file)
+			void write(std::fstream & file_handle, csv_format & fmt/*const char delimiter*/, Container<std::string> & c, std::string delim, const std::string & file)
 			{
 			  using iter =  typename Container<std::string>::iterator;
 			  using uint = unsigned int;
