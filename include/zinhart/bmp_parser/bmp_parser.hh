@@ -50,28 +50,6 @@ namespace zinhart
 		  bmp_parser& operator = (bmp_parser&&) = default;
 		  ~bmp_parser() = default;
 		  template<class Container>
-			void write_line(std::fstream & file_handle, const char delimiter, const Container & c, const std::string & file, const char eol = '\n')
-			{
-			  static_assert(std::is_class<Container>::value && std::is_fundamental< typename Container::value_type>::value,"only containers of primitive types may be recieved as arguments to encode");  
-			  using iter =  typename Container::const_iterator;
-			  using uint = unsigned int;
-			  if(!file_handle.is_open())
-			  {
-				file_handle.open( file,  std::ios::app | std::ios::out );
-			  }
-			  std::string line;
-			  line.reserve(c.size() * 2 + 1);// perform 1 allocation
-			  line.resize(0);
-			  for(uint i = 0; i < c.size(); ++i)
-			  {
-				line.push_back(static_cast<char>(c[i]));
-				line.push_back(delimiter);
-			  }
-			  line.erase(line.begin() + line.size() -1); // git rid of delimeter behind the last value
-			  file_handle<<line<<eol;
-			  file_handle.close();
-			}
-		  template<class Container>
 			void write(std::fstream & file_handle, Container & c, std::string delim, const std::string & file, const char eol = '\n')
 			{
 			  using iter =  typename Container::iterator;
@@ -99,6 +77,51 @@ namespace zinhart
 			}
 			file_handle.close();
 		  }
+		  
+		  template<class Container>
+			void write_line(std::fstream & file_handle, const char delimiter, const Container & c, const std::string & file, const char eol = '\n')
+			{
+			  static_assert(std::is_class<Container>::value && std::is_fundamental< typename Container::value_type>::value,"only containers of primitive types may be recieved as arguments to encode");  
+			  using iter =  typename Container::const_iterator;
+			  using uint = unsigned int;
+			  if(!file_handle.is_open())
+			  {
+				file_handle.open( file, std::ios::out );
+			  }
+			  std::string line;
+			  line.reserve(c.size() * 2 + 1);// perform 1 allocation
+			  line.resize(0);
+			  for(uint i = 0; i < c.size(); ++i)
+			  {
+				line.push_back(static_cast<char>(c[i]));
+				line.push_back(delimiter);
+			  }
+			  line.erase(line.begin() + line.size() -1); // git rid of delimeter behind the last value
+			  file_handle<<line<<eol;
+			  file_handle.close();
+			}
+		  template<class Container>
+			void write_line_app(std::fstream & file_handle, const char delimiter, const Container & c, const std::string & file, const char eol = '\n')
+			{
+			  static_assert(std::is_class<Container>::value && std::is_fundamental< typename Container::value_type>::value,"only containers of primitive types may be recieved as arguments to encode");  
+			  using iter =  typename Container::const_iterator;
+			  using uint = unsigned int;
+			  if(!file_handle.is_open())
+			  {
+				file_handle.open( file,  std::ios::app | std::ios::out );
+			  }
+			  std::string line;
+			  line.reserve(c.size() * 2 + 1);// perform 1 allocation
+			  line.resize(0);
+			  for(uint i = 0; i < c.size(); ++i)
+			  {
+				line.push_back(static_cast<char>(c[i]));
+				line.push_back(delimiter);
+			  }
+			  line.erase(line.begin() + line.size() -1); // git rid of delimeter behind the last value
+			  file_handle<<line<<eol;
+			  file_handle.close();
+			}
 
 		  template <class Container>
 			void read_line(std::fstream & file_handle, Container & output, char delim, const std::string & file)

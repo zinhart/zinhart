@@ -18,25 +18,6 @@ TEST(bitmap_parser_test, write_read_ascii)
   bp.read_line(strm, read_ascii, delimeter, file);
   for(i = 0; i < write_ascii.size(); ++i)
 	ASSERT_EQ(read_ascii.at(i)[0], write_ascii[i]);
-
-  /*
-  using namespace zinhart;
-  csv_format fmt;
-  fmt.set_delimeters('#',',','\n');
-  binary_parser<ascii> p;
-  vector_space<char,1> a({'a','b','c','d'});
-  fstream strm;
-  string file("ascii");
-  p.write(strm,fmt,a,file);
-  vector<std::string> vec;
-  p.read(strm,fmt,vec,file);
-  std::for_each(vec.begin(),vec.end(),[&vec](std::string & init){std::cout<<init<<"\n";});
-  string iris_data_set("training-data/iris-flower-data-set");
-  p.read(strm,vec,iris_data_set,'\n', [](std::string & init){init.insert(0,",");std::rotate(init.begin(),init.begin()+17,init.end());init.pop_back();});
-  std::for_each(vec.begin(),vec.end(),[&vec](std::string & init){std::cout<<init<<"\n";});
-  string iris("encoded-iris-data-set-ascii");
- // p.write(strm,fmt,vec,",",iris);
- */
 }
 TEST(bitmap_parser_test, read_ascii_callback)
 {
