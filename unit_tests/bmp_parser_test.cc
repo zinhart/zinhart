@@ -6,11 +6,11 @@ using namespace zinhart::bmp;
 TEST(bitmap_parser_test, write_read_ascii)
 {
 
-  zinhart::bmp::bmp_parser<zinhart::bmp::ASCII> parser;
+  zinhart::bmp::bmp_parser<zinhart::bmp::ascii> parser;
   std::vector<char> write_ascii({'a','b','c','d'});
   std::vector<std::string> read_ascii;
   std::uint32_t i{0};  
-  bmp_parser<ASCII> bp;
+  bmp_parser<ascii> bp;
   std::fstream strm;
   const std::string file("ascii");
   const char delimeter{','};
@@ -18,13 +18,12 @@ TEST(bitmap_parser_test, write_read_ascii)
   bp.read_line(strm, read_ascii, delimeter, file);
   for(i = 0; i < write_ascii.size(); ++i)
 	ASSERT_EQ(read_ascii.at(i)[0], write_ascii[i]);
-//	std::cout<<read_ascii[i]<<" ";
 
   /*
   using namespace zinhart;
   csv_format fmt;
   fmt.set_delimeters('#',',','\n');
-  binary_parser<ASCII> p;
+  binary_parser<ascii> p;
   vector_space<char,1> a({'a','b','c','d'});
   fstream strm;
   string file("ascii");
@@ -38,6 +37,38 @@ TEST(bitmap_parser_test, write_read_ascii)
   string iris("encoded-iris-data-set-ascii");
  // p.write(strm,fmt,vec,",",iris);
  */
+}
+TEST(bitmap_parser_test, read_ascii_callback)
+{
+  // essentially moves iris class labels from end to beginning of each line through a callback
+  bmp_parser<ascii> bp;
+  std::uint32_t i{0};
+  std::fstream strm;
+  std::vector<std::string> read_iris;
+  const std::string iris_data_set("iris-flower-dataset");
+  bp.read(strm, read_iris, iris_data_set,'\n', [](std::string & init){init.insert(0,",");std::rotate(init.begin(),init.begin()+17,init.end());init.pop_back();});
+  for(i = 0; i < read_iris.size(); ++i)
+  {
+	std::string & point{read_iris.at(i)};
+	if(i < 50)
+	{
+	  std::string cmp(point.begin(), point.end() - 16);
+	  ASSERT_EQ(cmp, std::string("Iris-setosa"));
+
+	}
+	else if(i > 50 && i < 100)
+	{
+	  std::string cmp(point.begin(), point.end() - 16);
+	  ASSERT_EQ(cmp, std::string("Iris-versicolor"));
+	}
+	else if(i > 100 && i < 150)
+	{
+	  std::string cmp(point.begin(), point.end() - 16);
+	  ASSERT_EQ(cmp, std::string("Iris-virginica"));
+	}
+  }
+  const std::string encoded_iris("encoded-iris-data-set-ascii");
+  bp.write(strm, read_iris,",", encoded_iris);
 }
 
 TEST(bitmap_parser_test,binary)

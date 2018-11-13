@@ -7,7 +7,7 @@ namespace zinhart
 {
   namespace bmp
   {
-  	enum file_type : char {ASCII = 0, BIN};
+  	enum file_type : char {ascii = 0, BIN};
 	enum binary_file_format : char {GENERIC = 0, IDX = 1};
 	class csv_format
 	{
@@ -38,7 +38,7 @@ namespace zinhart
 	  class bmp_parser;
 
 	template<>
-	  class bmp_parser<ASCII>
+	  class bmp_parser<ascii>
 	  {
 		public:
 		  using uchar = std::uint8_t;
@@ -71,10 +71,10 @@ namespace zinhart
 			  file_handle<<line<<eol;
 			  file_handle.close();
 			}
-		  template<template <typename> class Container>
-			void write(std::fstream & file_handle, csv_format & fmt/*const char delimiter*/, Container<std::string> & c, std::string delim, const std::string & file)
+		  template<class Container>
+			void write(std::fstream & file_handle, Container & c, std::string delim, const std::string & file, const char eol = '\n')
 			{
-			  using iter =  typename Container<std::string>::iterator;
+			  using iter =  typename Container::iterator;
 			  using uint = unsigned int;
 			  if(!file_handle.is_open())
 			  {
@@ -83,21 +83,18 @@ namespace zinhart
 			  std::string line,temp;
 			  line.reserve(c.size() * 2 + 1);
 			  line.resize(0);
-			  std::string delimiters = fmt.get_delimeters();
-			  std::regex delim_re("\\" +  delim + "+");
+			  std::regex delim_regex("\\" +  delim + "+");
 			  std::sregex_token_iterator srti_end;
 			  for(uint i = 0; i < c.size(); ++i)
 			  {
-				std::sregex_token_iterator srti(c[i].begin(), c[i].end(), delim_re, -1);
-				line.push_back( delimiters[0] ); 
+				std::sregex_token_iterator srti(c[i].begin(), c[i].end(), delim_regex, -1);
 				for(;srti != srti_end; ++srti)
 				{
 				  line +=  srti->str();
-				  line += delimiters[1];
+				  line += delim;
 				}
 				line.pop_back();
-				line += delimiters[2];
-				file_handle<<line;
+				file_handle<<line<<eol;
 				line.clear();
 			}
 			file_handle.close();
@@ -150,8 +147,8 @@ namespace zinhart
 			  while(std::getline(file_handle,line,delimiters[2])){output.push_back(line);}
 			  file_handle.close();
 			}
-		  template<class Container, class Function>
-			void read(std::fstream & file_handle, Container & output, std::string & file, char delim, Function F)
+		  template<class Container, class Callback>
+			void read(std::fstream & file_handle, Container & output, const std::string & file, char delim, Callback callback)
 			{
 			  static_assert(std::is_same<typename Container::value_type, std::string>::value,"Only containers of strings may be recieved as an argument to read");  
 			  if(!file_handle.is_open())
@@ -164,7 +161,7 @@ namespace zinhart
 			  {
 				output.push_back(line);
 			  }
-			  std::for_each(output.begin(),output.end(),[&F](std::string & init){ F(init);});
+			  std::for_each(output.begin(),output.end(),[&callback](std::string & init){ callback(init);});
 			  file_handle.close();
 			}
 	  };
@@ -252,7 +249,7 @@ namespace zinhart
 	  class csv_writer;
 
 	template<>
-	  class csv_writer<ASCII> : public bmp_parser<ASCII> 
+	  class csv_writer<ascii> : public bmp_parser<ascii> 
 	  {
 		public:
 		  csv_writer() = default;
@@ -285,7 +282,7 @@ namespace zinhart
 	  class csv_reader;
 
 	template<>
-	  class csv_reader<ASCII> : public bmp_parser<ASCII> 
+	  class csv_reader<ascii> : public bmp_parser<ascii> 
 	  {
 		public:
 		  csv_reader() = default;
