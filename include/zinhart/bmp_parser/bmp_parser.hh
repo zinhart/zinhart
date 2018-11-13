@@ -50,7 +50,7 @@ namespace zinhart
 		  bmp_parser& operator = (bmp_parser&&) = default;
 		  ~bmp_parser() = default;
 		  template<class Container>
-			void write(std::fstream & file_handle, csv_format & fmt/*const char delimiter*/, const Container & c, const std::string & file)
+			void write_line(std::fstream & file_handle, const char delimiter, const Container & c, const std::string & file, const char eol = '\n')
 			{
 			  static_assert(std::is_class<Container>::value && std::is_fundamental< typename Container::value_type>::value,"only containers of primitive types may be recieved as arguments to encode");  
 			  using iter =  typename Container::const_iterator;
@@ -62,15 +62,13 @@ namespace zinhart
 			  std::string line;
 			  line.reserve(c.size() * 2 + 1);// perform 1 allocation
 			  line.resize(0);
-			  std::string delimiters = fmt.get_delimeters();
-			  line.push_back( delimiters[0] ); 
 			  for(uint i = 0; i < c.size(); ++i)
 			  {
 				line.push_back(static_cast<char>(c[i]));
-				line.push_back(delimiters[1]);
+				line.push_back(delimiter);
 			  }
-			  line[line.size() - 1] = delimiters[2]; 
-			  file_handle<<line;
+			  line.erase(line.begin() + line.size() -1); // git rid of delimeter behind the last value
+			  file_handle<<line<<eol;
 			  file_handle.close();
 			}
 		  template<template <typename> class Container>
@@ -104,6 +102,24 @@ namespace zinhart
 			}
 			file_handle.close();
 		  }
+
+		  template <class Container>
+			void read_line(std::fstream & file_handle, Container & output, char delim, const std::string & file)
+			{
+			  static_assert(std::is_same<typename Container::value_type, std::string>::value,"Only containers of strings may be recieved as an argument to strip");
+
+			  if(!file_handle.is_open())
+			  {
+				file_handle.open( file, std::ios::in );
+			  }
+			  std::string line;
+			  output.clear();
+			  while(std::getline(file_handle,line,delim))
+			  {
+				output.push_back(line);
+			  }
+			  file_handle.close();
+			}
 		  template <class Container>
 			void read(std::fstream & file_handle, Container & output, char delim, const std::string & file)
 			{
@@ -148,7 +164,7 @@ namespace zinhart
 			  {
 				output.push_back(line);
 			  }
-			  std::for_each(output.begin(),output.end(),[&F](std::string & init){F(init);});
+			  std::for_each(output.begin(),output.end(),[&F](std::string & init){ F(init);});
 			  file_handle.close();
 			}
 	  };

@@ -1,10 +1,25 @@
 #include <gtest/gtest.h>
 #include <zinhart/zinhart.hh>
 #include <vector>
+#include <fstream>
+using namespace zinhart::bmp;
 TEST(bitmap_parser_test, write_read_ascii)
 {
+
   zinhart::bmp::bmp_parser<zinhart::bmp::ASCII> parser;
-  std::vector<char> a({'a','b','c','d'});
+  std::vector<char> write_ascii({'a','b','c','d'});
+  std::vector<std::string> read_ascii;
+  std::uint32_t i{0};  
+  bmp_parser<ASCII> bp;
+  std::fstream strm;
+  const std::string file("ascii");
+  const char delimeter{','};
+  bp.write_line(strm, delimeter, write_ascii,file);
+  bp.read_line(strm, read_ascii, delimeter, file);
+  for(i = 0; i < write_ascii.size(); ++i)
+	ASSERT_EQ(read_ascii.at(i)[0], write_ascii[i]);
+//	std::cout<<read_ascii[i]<<" ";
+
   /*
   using namespace zinhart;
   csv_format fmt;
