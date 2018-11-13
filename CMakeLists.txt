@@ -10,6 +10,8 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RELEASE")
 endif()
 
+set (ZINHART_INCLUDE_DIR zinhart/include CACHE STRING "ZINHART INCLUDE DIRS")
+
 # add subdirectory multi_core
 add_subdirectory(multi_core)
 #
