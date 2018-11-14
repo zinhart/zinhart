@@ -6,7 +6,7 @@ import multiprocessing
 #import codecs
 
 subcommands = ['build']
-modules     = ['ann', 'multi_core']
+modules     = ['multi_core','bmp','ann']
 def add_cmake_args(cmake_cmd, args):
     if args.release != None:
         if not os.path.exists(args.release):
