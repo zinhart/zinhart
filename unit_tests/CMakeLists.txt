@@ -23,7 +23,6 @@ else()
   # multi_core unit test src
   set(zinhart_unit_tests_src
    run_all.cc
-   bmp_parser_test.cc
    )
 add_executable(zinhart_unit_tests ${zinhart_unit_tests_src})
 

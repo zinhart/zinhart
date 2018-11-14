@@ -14,7 +14,9 @@ set (ZINHART_INCLUDE_DIR zinhart/include CACHE STRING "ZINHART INCLUDE DIRS")
 
 # add subdirectory multi_core
 add_subdirectory(multi_core)
-#
+# add subdirectory bmp
+add_subdirectory(bmp)
+# add sub directory ann
 add_subdirectory(ann)
 
 
@@ -31,7 +33,7 @@ option(BuildCuda "BuildCuda" ON)
 # library type
 option(BuildShared "BuildShared" OFF)
 # nesting protection
-option(MultiCoreUseCodeCoverage "ZinhartUseCodeCoverage" ON)
+option(ZinhartUseCodeCoverage "ZinhartUseCodeCoverage" ON)
 # sanitizer support
 option(Sanitize "Sanitize" OFF)
 
@@ -95,8 +97,9 @@ else()
   else()
 	add_definitions(-DCUDA_ENABLED=false)
   endif()
-  # set include paths
-  include_directories(. include "${MULTI_CORE_INCLUDE_DIR}" "${PROJECT_BINARY_DIR}")
+
+  include_directories(. include "${MULTI_CORE_INCLUDE_DIR}" "${BMP_INCLUDE_DIR}" "${ANN_INCLUDE_DIR}" "${PROJECT_BINARY_DIR}")
+  
 endif()
 
 
@@ -218,7 +221,7 @@ if(ZinhartUseCodeCoverage)
 	  # ignore extraneous files
 	  set(COVERAGE_LCOV_EXCLUDES '/usr/include/*' '${PROJECT_BINARY_DIR}/googlebench-src/*' '${PROJECT_BINARY_DIR}/googletest-src/*')
 	  SETUP_TARGET_FOR_COVERAGE_LCOV(NAME         ${PROJECT_NAME}_coverage 
-									 EXECUTABLE   ./unit_tests/multi_core_unit_tests 
+									 EXECUTABLE   ./unit_tests/zinhart_unit_tests 
 									 DEPENDENCIES ${PROJECT_NAME})
   endif()
 endif()

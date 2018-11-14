@@ -4,3 +4,6 @@
 [submodule "ann"]
 	path = ann
 	url = git@github.com:zinhart/ann.git
+[submodule "bmp"]
+	path = bmp
+	url = git@github.com:zinhart/bmp.git

@@ -36,6 +36,7 @@ else()
    #link cpu threading library & MKL
    target_link_libraries(zinhart
    multi_core 
+   bmp
    ann
    #   ${MKL_LIBRARIES}
    ${CMAKE_THREAD_LIBS_INIT}
