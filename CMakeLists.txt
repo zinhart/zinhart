@@ -169,7 +169,7 @@ if(BuildUnitTest)
 	endif()
 
   endif()
-  add_subdirectory(unit_tests)
+  #add_subdirectory(unit_tests)
 
 endif()
 
@@ -211,7 +211,7 @@ if(BuildBenchmarks)
 				     EXCLUDE_FROM_ALL
 					)
   endif()
-  add_subdirectory(benchmarks)
+  #add_subdirectory(benchmarks)
 endif()
 
 # code coverage
